@@ -234,22 +234,22 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            black_key = False
-            for i in range(len(black_keys)):
-                if black_keys[i].collidepoint(event.pos):
-                    black_sounds[i].play(0, 1000)
-                    black_key = True
-                    active_blacks.append([i, 30])
-            for i in range(len(white_keys)):
-                if white_keys[i].collidepoint(event.pos) and not black_key:
-                    white_sounds[i].play(0, 3000)
-                    active_whites.append([i, 30])
+        # if event.type == pygame.MOUSEBUTTONDOWN:
+        #     black_key = False
+        #     for i in range(len(black_keys)):
+        #         if black_keys[i].collidepoint(event.pos):
+        #             black_sounds[i].play(0, 1000)
+        #             black_key = True
+        #             active_blacks.append([i, 30])
+        #     for i in range(len(white_keys)):
+        #         if white_keys[i].collidepoint(event.pos) and not black_key:
+        #             white_sounds[i].play(0, 3000)
+        #             active_whites.append([i, 30])
 
         if event.type == pygame.TEXTINPUT:
             if event.text.upper() in main_dict:
                     index = main_notes.index(main_dict[event.text.upper()])
-                    main_sounds[index].play(0, 1000)
+                    main_sounds[index].play(0, 700)
                     # active_whites.append([index, 30])
 
         
