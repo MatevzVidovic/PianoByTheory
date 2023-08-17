@@ -28,13 +28,22 @@ white_notes = pl.white_notes
 black_notes = pl.black_notes
 black_labels = pl.black_labels
 
-for i in range(len(white_notes)):
-    white_sounds.append(mixer.Sound(f'assets\\notes\\{white_notes[i]}.wav'))
 
-for i in range(len(black_notes)):
-    black_sounds.append(mixer.Sound(f'assets\\notes\\{black_notes[i]}.wav'))
 
-pygame.display.set_caption("Pete's Python Piano")
+main_notes = pl.main_notes
+main_sounds = []
+
+
+for i in range(len(main_notes)):
+    main_sounds.append(mixer.Sound(f'assets\\notes\\{main_notes[i]}.wav'))
+
+# for i in range(len(white_notes)):
+#     white_sounds.append(mixer.Sound(f'assets\\notes\\{white_notes[i]}.wav'))
+
+# for i in range(len(black_notes)):
+#     black_sounds.append(mixer.Sound(f'assets\\notes\\{black_notes[i]}.wav'))
+
+pygame.display.set_caption("Eva's littol piano")
 
 
 def draw_piano(whites, blacks):
@@ -149,37 +158,78 @@ def draw_title_bar():
     screen.blit(title_text, (300, 20))
 
 
+
+main_dict = {'1': f'1',
+                '2': f'2',
+                '3': f'3',
+                '4': f'4',
+                '5': f'5',
+                '6': f'6',
+                '7': f'7',
+                '8': f'8',
+                '9': f'9',
+                '0': f'10',
+                'Q': f'11',
+                'W': f'12',
+                'E': f'13',
+                'R': f'14',
+                'T': f'15',
+                'Z': f'16',
+                'U': f'17',
+                'I': f'18',
+                'O': f'19',
+                'P': f'20',
+                'A': f'21',
+                'S': f'22',
+                'D': f'23',
+                'F': f'24',
+                'G': f'25',
+                'H': f'26',
+                'J': f'27',
+                'K': f'28',
+                'L': f'29',
+                'Y': f'30',
+                'X': f'31',
+                'C': f'32',
+                'V': f'33',
+                'B': f'34',
+                'N': f'35',
+                'N': f'36'}
+
 run = True
 while run:
-    left_dict = {'Z': f'C{left_oct}',
-                 'S': f'C#{left_oct}',
-                 'X': f'D{left_oct}',
-                 'D': f'D#{left_oct}',
-                 'C': f'E{left_oct}',
-                 'V': f'F{left_oct}',
-                 'G': f'F#{left_oct}',
-                 'B': f'G{left_oct}',
-                 'H': f'G#{left_oct}',
-                 'N': f'A{left_oct}',
-                 'J': f'A#{left_oct}',
-                 'M': f'B{left_oct}'}
 
-    right_dict = {'R': f'C{right_oct}',
-                  '5': f'C#{right_oct}',
-                  'T': f'D{right_oct}',
-                  '6': f'D#{right_oct}',
-                  'Y': f'E{right_oct}',
-                  'U': f'F{right_oct}',
-                  '8': f'F#{right_oct}',
-                  'I': f'G{right_oct}',
-                  '9': f'G#{right_oct}',
-                  'O': f'A{right_oct}',
-                  '0': f'A#{right_oct}',
-                  'P': f'B{right_oct}'}
+    
+    # left_dict = {'Z': f'C{left_oct}',
+    #              'S': f'C#{left_oct}',
+    #              'X': f'D{left_oct}',
+    #              'D': f'D#{left_oct}',
+    #              'C': f'E{left_oct}',
+    #              'V': f'F{left_oct}',
+    #              'G': f'F#{left_oct}',
+    #              'B': f'G{left_oct}',
+    #              'H': f'G#{left_oct}',
+    #              'N': f'A{left_oct}',
+    #              'J': f'A#{left_oct}',
+    #              'M': f'B{left_oct}'}
+
+    # right_dict = {'R': f'C{right_oct}',
+    #               '5': f'C#{right_oct}',
+    #               'T': f'D{right_oct}',
+    #               '6': f'D#{right_oct}',
+    #               'Y': f'E{right_oct}',
+    #               'U': f'F{right_oct}',
+    #               '8': f'F#{right_oct}',
+    #               'I': f'G{right_oct}',
+    #               '9': f'G#{right_oct}',
+    #               'O': f'A{right_oct}',
+    #               '0': f'A#{right_oct}',
+    #               'P': f'B{right_oct}'}
+
     timer.tick(fps)
     screen.fill('gray')
     white_keys, black_keys, active_whites, active_blacks = draw_piano(active_whites, active_blacks)
-    draw_hands(right_oct, left_oct, right_hand, left_hand)
+    # draw_hands(right_oct, left_oct, right_hand, left_hand)
     draw_title_bar()
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -195,39 +245,47 @@ while run:
                 if white_keys[i].collidepoint(event.pos) and not black_key:
                     white_sounds[i].play(0, 3000)
                     active_whites.append([i, 30])
-        if event.type == pygame.TEXTINPUT:
-            if event.text.upper() in left_dict:
-                if left_dict[event.text.upper()][1] == '#':
-                    index = black_labels.index(left_dict[event.text.upper()])
-                    black_sounds[index].play(0, 1000)
-                    active_blacks.append([index, 30])
-                else:
-                    index = white_notes.index(left_dict[event.text.upper()])
-                    white_sounds[index].play(0, 1000)
-                    active_whites.append([index, 30])
-            if event.text.upper() in right_dict:
-                if right_dict[event.text.upper()][1] == '#':
-                    index = black_labels.index(right_dict[event.text.upper()])
-                    black_sounds[index].play(0, 1000)
-                    active_blacks.append([index, 30])
-                else:
-                    index = white_notes.index(right_dict[event.text.upper()])
-                    white_sounds[index].play(0, 1000)
-                    active_whites.append([index, 30])
 
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT:
-                if right_oct < 8:
-                    right_oct += 1
-            if event.key == pygame.K_LEFT:
-                if right_oct > 0:
-                    right_oct -= 1
-            if event.key == pygame.K_UP:
-                if left_oct < 8:
-                    left_oct += 1
-            if event.key == pygame.K_DOWN:
-                if left_oct > 0:
-                    left_oct -= 1
+        if event.type == pygame.TEXTINPUT:
+            if event.text.upper() in main_dict:
+                    index = main_notes.index(main_dict[event.text.upper()])
+                    main_sounds[index].play(0, 1000)
+                    # active_whites.append([index, 30])
+
+        
+        # if event.type == pygame.TEXTINPUT:
+        #     if event.text.upper() in left_dict:
+        #         if left_dict[event.text.upper()][1] == '#':
+        #             index = black_labels.index(left_dict[event.text.upper()])
+        #             black_sounds[index].play(0, 1000)
+        #             active_blacks.append([index, 30])
+        #         else:
+        #             index = white_notes.index(left_dict[event.text.upper()])
+        #             white_sounds[index].play(0, 1000)
+        #             active_whites.append([index, 30])
+        #     if event.text.upper() in right_dict:
+        #         if right_dict[event.text.upper()][1] == '#':
+        #             index = black_labels.index(right_dict[event.text.upper()])
+        #             black_sounds[index].play(0, 1000)
+        #             active_blacks.append([index, 30])
+        #         else:
+        #             index = white_notes.index(right_dict[event.text.upper()])
+        #             white_sounds[index].play(0, 1000)
+        #             active_whites.append([index, 30])
+
+        # if event.type == pygame.KEYDOWN:
+        #     if event.key == pygame.K_RIGHT:
+        #         if right_oct < 8:
+        #             right_oct += 1
+        #     if event.key == pygame.K_LEFT:
+        #         if right_oct > 0:
+        #             right_oct -= 1
+        #     if event.key == pygame.K_UP:
+        #         if left_oct < 8:
+        #             left_oct += 1
+        #     if event.key == pygame.K_DOWN:
+        #         if left_oct > 0:
+        #             left_oct -= 1
 
     pygame.display.flip()
 pygame.quit()
