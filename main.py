@@ -30,12 +30,137 @@ black_labels = pl.black_labels
 
 
 
-main_notes = pl.main_notes
-main_sounds = []
+# Piano notes imajo lepo indekse. In so note lepo v zaporedju. Na to se bom moral usest.
+
+# namesto left pa right hand: first, second, third, fourth octave
+"""
+samo 7 tipk v oktavi. 8. je že tonik naslednje oktave.
+1-7 = 0. oktava
+r-p 
+a-j
+y-m - kolikor je sploh obstaja, ker nam zmanjka tonov.
+Pomoje je boljše, da 4. oktava sploh ne obstaja. Tako bom pri vseh shiftih bil brez problema, ker ne bo list out of range.
+Čeprav, lahko bi samo naredil, da je silent, če ni mesta.
+Pač en try catch okrog tega klica tona in to je to.
+"""
+
+"""
+dur in mol mantisa.
+
+Tonik kot stevilka. Lahko si predstavljaš, da predstavlja tonik v 0. oktavi.
+Potem tej številki prišteješ 12 in imaš naslednji tonik, in 12 pa je naslednji...
+Najbolš, da je to kr array s 4 zadevami.
+
+potem pa na vsak od teh tonikov daš mantiso in dobiš pozicije tonov te oktave, ki jo hočeš.
+
+Torej funkcija, ki bo ob sideways keys spremenila tonike, glede nanje in glede na mantiso spremenila oktave,
+in ispisala tonik in mantiso, na kateri smo.
+
+Key up in key down je fora, da bi trenutnio ton bil za pol zvišan ali znižan, ne glede na lestvico.
+To bi implementiral pač tako, da v momentu, ko je pritisnjen, v vseh oktava arrayih samo prišteješ 1.
+Ampak terenutno še ne bom tega.
+
+Ideja je, da bi lahko igral vse tone z levo, na puščicah pa bi imel možnost 
+z desno višati ali nižati ton (namerno posebni kromatični intervali),
+in pa shiftati lestvico kar med igranjem, da lahko izvedeš key changes.
 
 
-for i in range(len(main_notes)):
-    main_sounds.append(mixer.Sound(f'assets\\notes\\{main_notes[i]}.wav'))
+Shift naj pa spremeni dur v mol/mol v dur.
+Za zdaj naj to stori kar 0, ker bo lažje sprogramirat.
+Toniki ostanejo isti, samo oktave se preračunajo z drugo mantiso.
+Čeprav, bilo bi bolj kul, da bi šel v relative minor, kot v minor z istim tonikom.
+Sicer se tisti moment tipke ne bi spremenile, ampak layout bi se.
+Ni tako kul da bi se zdajle ukvarjal s tem.
+
+
+
+- funkcija za spreminjanje tonika
+- funkcija za dur v mol in obratno
+- funkcija za zvišanje tona (ne zdajle)
+
+"""
+
+all_sounds = list()
+
+def listWithAdd(list, num):
+    newList = list.copy()
+    for i in range(len(list)):
+        newList[i] = list[i] + num
+    return newList
+
+def listWithAddInPlace(list, num):
+    for i in range(len(list)):
+        list[i] = list[i] + num
+    return
+
+isMajor = True
+tonicArray = [0, 12, 24, 36]
+majorMantis = [0, 2, 4, 5, 7, 9, 11]
+minorMantis = [0, 2, 3, 5, 7, 8, 10]
+
+octaves = list()
+octaves.append(listWithAdd(majorMantis, tonicArray[0]))
+octaves.append(listWithAdd(majorMantis, tonicArray[1]))
+octaves.append(listWithAdd(majorMantis, tonicArray[2]))
+octaves.append(listWithAdd(majorMantis, tonicArray[3]))
+
+
+"""- funkcija za spreminjanje tonika
+- funkcija za dur v mol in obratno"""
+
+def changeTonic(numOfChange):
+    
+    listWithAddInPlace(tonicArray, numOfChange)
+    
+    mantis = majorMantis if isMajor else minorMantis
+
+    returnOctaves = list()
+    returnOctaves.append(listWithAdd(mantis, tonicArray[0]))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[1]))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[2]))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[3]))
+
+    print(piano_notes[tonicArray[0]])
+    print("maj") if isMajor else print("min")
+
+    print(octaves)
+
+
+    return returnOctaves
+
+
+def changeMajor():
+
+    currentMajor = not isMajor
+
+    mantis = majorMantis if currentMajor else minorMantis
+
+    returnOctaves = list()
+    returnOctaves.append(listWithAdd(mantis, tonicArray[0]))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[1]))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[2]))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[3]))
+
+
+    print(piano_notes[tonicArray[0]])
+    print("maj") if currentMajor else print("min")
+
+    return returnOctaves, currentMajor
+
+
+
+
+
+
+
+
+
+
+
+
+
+for i in range(len(piano_notes)):
+    all_sounds.append(mixer.Sound(f'assets\\notes\\{piano_notes[i]}.wav'))
 
 # for i in range(len(white_notes)):
 #     white_sounds.append(mixer.Sound(f'assets\\notes\\{white_notes[i]}.wav'))
@@ -43,7 +168,7 @@ for i in range(len(main_notes)):
 # for i in range(len(black_notes)):
 #     black_sounds.append(mixer.Sound(f'assets\\notes\\{black_notes[i]}.wav'))
 
-pygame.display.set_caption("Eva's littol piano")
+pygame.display.set_caption("Eua's Python Piano")
 
 
 def draw_piano(whites, blacks):
@@ -159,47 +284,45 @@ def draw_title_bar():
 
 
 
-main_dict = {'1': f'1',
-                '2': f'2',
-                '3': f'3',
-                '4': f'4',
-                '5': f'5',
-                '6': f'6',
-                '7': f'7',
-                '8': f'8',
-                '9': f'9',
-                '0': f'10',
-                'Q': f'11',
-                'W': f'12',
-                'E': f'13',
-                'R': f'14',
-                'T': f'15',
-                'Z': f'16',
-                'U': f'17',
-                'I': f'18',
-                'O': f'19',
-                'P': f'20',
-                'A': f'21',
-                'S': f'22',
-                'D': f'23',
-                'F': f'24',
-                'G': f'25',
-                'H': f'26',
-                'J': f'27',
-                'K': f'28',
-                'L': f'29',
-                'Y': f'30',
-                'X': f'31',
-                'C': f'32',
-                'V': f'33',
-                'B': f'34',
-                'N': f'35',
-                'N': f'36'}
+
 
 run = True
 while run:
 
-    
+    first_octave_dict = {'1': octaves[0][0],
+                    '2': octaves[0][1],
+                    '3': octaves[0][2],
+                    '4': octaves[0][3],
+                    '5': octaves[0][4],
+                    '6': octaves[0][5],
+                    '7': octaves[0][6],}
+
+
+
+    second_octave_dict = {'R': octaves[1][0],
+                        'T': octaves[1][1],
+                        'Z': octaves[1][2],
+                        'U': octaves[1][3],
+                        'I': octaves[1][4],
+                        'O': octaves[1][5],
+                        'P': octaves[1][6],}
+
+
+    third_octave_dict = {'A': octaves[2][0],
+                        'S': octaves[2][1],
+                        'D': octaves[2][2],
+                        'F': octaves[2][3],
+                        'G': octaves[2][4],
+                        'H': octaves[2][5],
+                        'J': octaves[2][6],}
+
+    fourth_octave_dict = {'Y': octaves[3][0],
+                        'X': octaves[3][1],
+                        'C': octaves[3][2],
+                        'V': octaves[3][3],
+                        'B': octaves[3][4],
+                        'N': octaves[3][5],
+                        'M': octaves[3][6],}
     # left_dict = {'Z': f'C{left_oct}',
     #              'S': f'C#{left_oct}',
     #              'X': f'D{left_oct}',
@@ -225,67 +348,78 @@ while run:
     #               'O': f'A{right_oct}',
     #               '0': f'A#{right_oct}',
     #               'P': f'B{right_oct}'}
-
     timer.tick(fps)
     screen.fill('gray')
     white_keys, black_keys, active_whites, active_blacks = draw_piano(active_whites, active_blacks)
-    # draw_hands(right_oct, left_oct, right_hand, left_hand)
+    draw_hands(right_oct, left_oct, right_hand, left_hand)
     draw_title_bar()
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
-        # if event.type == pygame.MOUSEBUTTONDOWN:
-        #     black_key = False
-        #     for i in range(len(black_keys)):
-        #         if black_keys[i].collidepoint(event.pos):
-        #             black_sounds[i].play(0, 1000)
-        #             black_key = True
-        #             active_blacks.append([i, 30])
-        #     for i in range(len(white_keys)):
-        #         if white_keys[i].collidepoint(event.pos) and not black_key:
-        #             white_sounds[i].play(0, 3000)
-        #             active_whites.append([i, 30])
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            black_key = False
+            for i in range(len(black_keys)):
+                if black_keys[i].collidepoint(event.pos):
+                    black_sounds[i].play(0, 1000)
+                    black_key = True
+                    active_blacks.append([i, 30])
+            for i in range(len(white_keys)):
+                if white_keys[i].collidepoint(event.pos) and not black_key:
+                    white_sounds[i].play(0, 3000)
+                    active_whites.append([i, 30])
 
         if event.type == pygame.TEXTINPUT:
-            if event.text.upper() in main_dict:
-                    index = main_notes.index(main_dict[event.text.upper()])
-                    main_sounds[index].play(0, 700)
-                    # active_whites.append([index, 30])
 
-        
-        # if event.type == pygame.TEXTINPUT:
-        #     if event.text.upper() in left_dict:
-        #         if left_dict[event.text.upper()][1] == '#':
-        #             index = black_labels.index(left_dict[event.text.upper()])
-        #             black_sounds[index].play(0, 1000)
-        #             active_blacks.append([index, 30])
-        #         else:
-        #             index = white_notes.index(left_dict[event.text.upper()])
-        #             white_sounds[index].play(0, 1000)
-        #             active_whites.append([index, 30])
-        #     if event.text.upper() in right_dict:
-        #         if right_dict[event.text.upper()][1] == '#':
-        #             index = black_labels.index(right_dict[event.text.upper()])
-        #             black_sounds[index].play(0, 1000)
-        #             active_blacks.append([index, 30])
-        #         else:
-        #             index = white_notes.index(right_dict[event.text.upper()])
-        #             white_sounds[index].play(0, 1000)
-        #             active_whites.append([index, 30])
+            if event.text.upper() == '0':
+                octaves, isMajor = changeMajor()
 
-        # if event.type == pygame.KEYDOWN:
-        #     if event.key == pygame.K_RIGHT:
-        #         if right_oct < 8:
-        #             right_oct += 1
-        #     if event.key == pygame.K_LEFT:
-        #         if right_oct > 0:
-        #             right_oct -= 1
-        #     if event.key == pygame.K_UP:
-        #         if left_oct < 8:
-        #             left_oct += 1
-        #     if event.key == pygame.K_DOWN:
-        #         if left_oct > 0:
-        #             left_oct -= 1
+            if event.text.upper() in first_octave_dict:
+                index = first_octave_dict[event.text.upper()]
+                all_sounds[index].play(0, 1000)
+                # active_blacks.append([index, 30])
+            
+            if event.text.upper() in second_octave_dict:
+                index = second_octave_dict[event.text.upper()]
+                all_sounds[index].play(0, 1000)
+                # active_blacks.append([index, 30])
+            
+            if event.text.upper() in third_octave_dict:
+                index = third_octave_dict[event.text.upper()]
+                all_sounds[index].play(0, 1000)
+                # active_blacks.append([index, 30])
+            
+            if event.text.upper() in fourth_octave_dict:
+                index = fourth_octave_dict[event.text.upper()]
+                all_sounds[index].play(0, 1000)
+                # active_blacks.append([index, 30])
+
+            # if event.text.upper() in right_dict:
+            #     if right_dict[event.text.upper()][1] == '#':
+            #         index = black_labels.index(right_dict[event.text.upper()])
+            #         black_sounds[index].play(0, 1000)
+            #         active_blacks.append([index, 30])
+            #     else:
+            #         index = white_notes.index(right_dict[event.text.upper()])
+            #         white_sounds[index].play(0, 1000)
+            #         active_whites.append([index, 30])
+
+        if event.type == pygame.KEYDOWN:
+
+            if event.key == pygame.K_RIGHT:
+                octaves = changeTonic(1)
+                # if right_oct < 8:
+                #     right_oct += 1
+            if event.key == pygame.K_LEFT:
+                octaves = changeTonic(-1)
+                # if right_oct > 0:
+                #     right_oct -= 1
+            # if event.key == pygame.K_UP:
+            #     if left_oct < 8:
+            #         left_oct += 1
+            # if event.key == pygame.K_DOWN:
+            #     if left_oct > 0:
+            #         left_oct -= 1
 
     pygame.display.flip()
 pygame.quit()
