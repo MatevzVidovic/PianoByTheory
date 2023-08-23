@@ -2,6 +2,9 @@ import pygame
 import piano_lists as pl
 from pygame import mixer
 
+from datetime import datetime
+now = datetime.now()
+
 pygame.init()
 pygame.mixer.set_num_channels(50)
 
@@ -312,12 +315,85 @@ def setActive(piano_notes_ix, activeLen=30):
 
 
 
+
+
+
+
+
+
+# Ideja je, da bi ti lahko ta app snemal session. Da ko si nekaj odigral, da bi potem lahko imel posneto in ti bi on se enkrat zaigral.
+# Res kul bi bilo, ce bi se zraven isto prizigale tipke.
+"""
+Pomoje bi lahko to dokaj preprosto naredil.
+V temle scriptu damo sam, da v en array zapisuje cas pritiska tipke in tipko.
+Ta array dam v string in na koncu sessiona zapisem v en txt file.
+Tale script kopiram pa ga zelo simply prilagodim, da namesto inputov vzame datoteko in jo odpre in naredi ast_literal in
+igra po tem arrayu.
+Lahko bi pred array se zapisal trenuten fps. Potem bi pa samo v while loopu imel en counter ki bi se zviseval.
+In bi iz teh dveh podatkov lahko delal ta zapis, brez da se rabim borit s pygame timerjem.
+
+9 bi lahko bila za zacetek in za konec tega snemalnega sessiona (pomoje 2 razlicni bi malo tezje za implement)
+if event.type == pygame.TEXTINPUT:
+            if event.text.upper() == '9':
+                startStopRecord()
+
+                
+
+
+Za poimenovanje text filea najbolje datum in ura s s pomisljaji vmes
+now.strftime("%d/%m/%Y-%H:%M:%S")
+"""
+# print(now.strftime("%d/%m/%Y-%H:%M:%S"))
+
+
+recordingList = list()
+
+isCurrRecording = False
+timeCounter = 0
+def startStopRecord(isCurrRecording, recordingList):
+    if isCurrRecording:
+        print("Recording stopping.")
+        isCurrRecording = False
+        outputStr = str(fps) + "\n" + str(recordingList)
+        fileName = str(now.strftime("%d,%m,%Y+%H,%M,%S")) + ".txt"
+
+        f = open(fileName, mode="x")
+        f.write(outputStr)
+        f.close()
+    else:
+        print("Recording starting.")
+        isCurrRecording = True
+        timeCounter = 0
+        recordingList = list()
+    return isCurrRecording, recordingList
+
+def addToRecordingList(index):
+    if not isCurrRecording:
+        return
+    else:
+        recordingList.append([index, timeCounter])
+    return
+
+
+
+
+
+
+
+
+
+
+
+
 # This is supposed to stop the KEYUP event happening repededly while you're actually still just holding the key.
 # It's also intendend to make the UP arrow key for sharps work as it's supposed to.
 pygame.key.set_repeat()
 
+
 run = True
 while run:
+
+    timeCounter += 1
 
     first_octave_dict = {'1': octaves[0][0],
                     '2': octaves[0][1],
@@ -403,29 +479,36 @@ while run:
 
             if event.text.upper() == '0':
                 octaves, isMajor = changeMajor()
+            
+            if event.text.upper() == '9':
+                isCurrRecording, recordingList = startStopRecord(isCurrRecording, recordingList)
 
             if event.text.upper() in first_octave_dict:
                 index = first_octave_dict[event.text.upper()]
                 all_sounds[index].play(0, 1000)
                 setActive(index)
+                addToRecordingList(index)
                 # active_blacks.append([index, 30])
 
             if event.text.upper() in second_octave_dict:
                 index = second_octave_dict[event.text.upper()]
                 all_sounds[index].play(0, 1000)
                 setActive(index)
+                addToRecordingList(index)
                 # active_blacks.append([index, 30])
 
             if event.text.upper() in third_octave_dict:
                 index = third_octave_dict[event.text.upper()]
                 all_sounds[index].play(0, 1000)
                 setActive(index)
+                addToRecordingList(index)
                 # active_blacks.append([index, 30])
 
             if event.text.upper() in fourth_octave_dict:
                 index = fourth_octave_dict[event.text.upper()]
                 all_sounds[index].play(0, 1000)
                 setActive(index)
+                addToRecordingList(index)
                 # active_blacks.append([index, 30])
 
             # if event.text.upper() in right_dict:
