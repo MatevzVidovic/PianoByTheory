@@ -94,7 +94,7 @@ def listWithAddInPlace(list, num):
     return
 
 isMajor = True
-tonicArray = [0, 12, 24, 36]
+tonicArray = [12, 24, 36, 48]
 majorMantis = [0, 2, 4, 5, 7, 9, 11]
 minorMantis = [0, 2, 3, 5, 7, 8, 10]
 
@@ -283,11 +283,29 @@ def draw_title_bar():
 
 
 
+# Preslika index iz piano_notes v [white_keys index, True] oziroma [black_keys index, False]
+piano_notes_2_colour_keys = dict()
+# tole pa ga konstruira
+A_whites_and_blacks_sequence = [True, False, True, True, False, True, False, True, True, False, True, False]
+chromatic_len = len(A_whites_and_blacks_sequence)
+whiteIx = 0
+blackIx = 0
+for i in range(8):
+    for j in range(len(A_whites_and_blacks_sequence)):
+        if(A_whites_and_blacks_sequence[j]):
+            piano_notes_2_colour_keys[ i * chromatic_len + j] = [whiteIx, True]
+            whiteIx += 1
+        else:
+            piano_notes_2_colour_keys[ i * chromatic_len + j] = [blackIx, False]
+            blackIx += 1
 
-# actives = {
-#     0 :
-# }
-
+def setActive(piano_notes_ix, activeLen=30):
+    currNote = piano_notes_2_colour_keys[piano_notes_ix]
+    if (currNote[1]):
+        active_whites.append([currNote[0], activeLen])
+    else:
+        active_blacks.append([currNote[0], activeLen])
+    return active_whites, active_blacks
 
 
 
@@ -389,21 +407,25 @@ while run:
             if event.text.upper() in first_octave_dict:
                 index = first_octave_dict[event.text.upper()]
                 all_sounds[index].play(0, 1000)
+                setActive(index)
                 # active_blacks.append([index, 30])
 
             if event.text.upper() in second_octave_dict:
                 index = second_octave_dict[event.text.upper()]
                 all_sounds[index].play(0, 1000)
+                setActive(index)
                 # active_blacks.append([index, 30])
 
             if event.text.upper() in third_octave_dict:
                 index = third_octave_dict[event.text.upper()]
                 all_sounds[index].play(0, 1000)
+                setActive(index)
                 # active_blacks.append([index, 30])
 
             if event.text.upper() in fourth_octave_dict:
                 index = fourth_octave_dict[event.text.upper()]
                 all_sounds[index].play(0, 1000)
+                setActive(index)
                 # active_blacks.append([index, 30])
 
             # if event.text.upper() in right_dict:
