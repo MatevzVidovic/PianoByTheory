@@ -148,6 +148,55 @@ def changeMajor():
     return returnOctaves, currentMajor
 
 
+def temporaryUp():
+
+    mantis = majorMantis if isMajor else minorMantis
+
+    returnOctaves = list()
+    returnOctaves.append(listWithAdd(mantis, tonicArray[0]+1))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[1]+1))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[2]+1))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[3]+1))
+
+    return returnOctaves
+
+
+def releaseUp():
+
+    mantis = majorMantis if isMajor else minorMantis
+
+    returnOctaves = list()
+    returnOctaves.append(listWithAdd(mantis, tonicArray[0]))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[1]))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[2]))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[3]))
+
+    return returnOctaves
+
+def temporaryDown():
+
+    mantis = majorMantis if isMajor else minorMantis
+
+    returnOctaves = list()
+    returnOctaves.append(listWithAdd(mantis, tonicArray[0]-1))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[1]-1))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[2]-1))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[3]-1))
+
+    return returnOctaves
+
+def releaseDown():
+
+    mantis = majorMantis if isMajor else minorMantis
+
+    returnOctaves = list()
+    returnOctaves.append(listWithAdd(mantis, tonicArray[0]))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[1]))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[2]))
+    returnOctaves.append(listWithAdd(mantis, tonicArray[3]))
+
+    return returnOctaves
+
 
 
 
@@ -354,6 +403,10 @@ while run:
     draw_hands(right_oct, left_oct, right_hand, left_hand)
     draw_title_bar()
 
+    # This is supposed to stop the KEYUP event happening repededly while you're actually still just holding the key.
+    # It's also intendend to make the UP arrow key for sharps work as it's supposed to.
+    pygame.key.set_repeat()
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
@@ -412,14 +465,28 @@ while run:
                 #     right_oct += 1
             if event.key == pygame.K_LEFT:
                 octaves = changeTonic(-1)
-                # if right_oct > 0:
-                #     right_oct -= 1
-            # if event.key == pygame.K_UP:
-            #     if left_oct < 8:
-            #         left_oct += 1
-            # if event.key == pygame.K_DOWN:
-            #     if left_oct > 0:
-            #         left_oct -= 1
+            
+            if event.key == pygame.K_UP:
+                octaves = temporaryUp()
+
+            
+            if event.key == pygame.K_UP:
+                octaves = temporaryUp()
+                print("Press sharp. " + str(tonicArray[0]) + " " + str(octaves[0][0]))
+            
+            if event.key == pygame.K_DOWN:
+                octaves = temporaryDown()
+        
+        # So that the key resets when you let go of the sharp/flat key
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_UP:
+                octaves = releaseUp()
+                print("Release sharp. " + str(tonicArray[0]) + " " + str(octaves[0][0]))
+                            
+            if event.key == pygame.K_DOWN:
+                octaves = releaseDown()
+            
+
 
     pygame.display.flip()
 pygame.quit()
