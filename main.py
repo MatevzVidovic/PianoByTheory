@@ -36,7 +36,7 @@ black_labels = pl.black_labels
 """
 samo 7 tipk v oktavi. 8. je že tonik naslednje oktave.
 1-7 = 0. oktava
-r-p 
+r-p
 a-j
 y-m - kolikor je sploh obstaja, ker nam zmanjka tonov.
 Pomoje je boljše, da 4. oktava sploh ne obstaja. Tako bom pri vseh shiftih bil brez problema, ker ne bo list out of range.
@@ -60,7 +60,7 @@ Key up in key down je fora, da bi trenutnio ton bil za pol zvišan ali znižan, 
 To bi implementiral pač tako, da v momentu, ko je pritisnjen, v vseh oktava arrayih samo prišteješ 1.
 Ampak terenutno še ne bom tega.
 
-Ideja je, da bi lahko igral vse tone z levo, na puščicah pa bi imel možnost 
+Ideja je, da bi lahko igral vse tone z levo, na puščicah pa bi imel možnost
 z desno višati ali nižati ton (namerno posebni kromatični intervali),
 in pa shiftati lestvico kar med igranjem, da lahko izvedeš key changes.
 
@@ -109,9 +109,9 @@ octaves.append(listWithAdd(majorMantis, tonicArray[3]))
 - funkcija za dur v mol in obratno"""
 
 def changeTonic(numOfChange):
-    
+
     listWithAddInPlace(tonicArray, numOfChange)
-    
+
     mantis = majorMantis if isMajor else minorMantis
 
     returnOctaves = list()
@@ -211,11 +211,11 @@ def releaseDown():
 for i in range(len(piano_notes)):
     all_sounds.append(mixer.Sound(f'assets\\notes\\{piano_notes[i]}.wav'))
 
-# for i in range(len(white_notes)):
-#     white_sounds.append(mixer.Sound(f'assets\\notes\\{white_notes[i]}.wav'))
+for i in range(len(white_notes)):
+    white_sounds.append(mixer.Sound(f'assets\\originalNotes\\{white_notes[i]}.wav'))
 
-# for i in range(len(black_notes)):
-#     black_sounds.append(mixer.Sound(f'assets\\notes\\{black_notes[i]}.wav'))
+for i in range(len(black_notes)):
+    black_sounds.append(mixer.Sound(f'assets\\originalNotes\\{black_notes[i]}.wav'))
 
 pygame.display.set_caption("Eua's Python Piano")
 
@@ -228,6 +228,7 @@ def draw_piano(whites, blacks):
         pygame.draw.rect(screen, 'black', [i * 35, HEIGHT - 300, 35, 300], 2, 2)
         key_label = small_font.render(white_notes[i], True, 'black')
         screen.blit(key_label, (i * 35 + 3, HEIGHT - 20))
+
     skip_count = 0
     last_skip = 2
     skip_track = 2
@@ -259,64 +260,11 @@ def draw_piano(whites, blacks):
             pygame.draw.rect(screen, 'green', [j * 35, HEIGHT - 100, 35, 100], 2, 2)
             whites[i][1] -= 1
 
+
+
     return white_rects, black_rects, whites, blacks
 
 
-def draw_hands(rightOct, leftOct, rightHand, leftHand):
-    # left hand
-    pygame.draw.rect(screen, 'dark gray', [(leftOct * 245) - 175, HEIGHT - 60, 245, 30], 0, 4)
-    pygame.draw.rect(screen, 'black', [(leftOct * 245) - 175, HEIGHT - 60, 245, 30], 4, 4)
-    text = small_font.render(leftHand[0], True, 'white')
-    screen.blit(text, ((leftOct * 245) - 165, HEIGHT - 55))
-    text = small_font.render(leftHand[2], True, 'white')
-    screen.blit(text, ((leftOct * 245) - 130, HEIGHT - 55))
-    text = small_font.render(leftHand[4], True, 'white')
-    screen.blit(text, ((leftOct * 245) - 95, HEIGHT - 55))
-    text = small_font.render(leftHand[5], True, 'white')
-    screen.blit(text, ((leftOct * 245) - 60, HEIGHT - 55))
-    text = small_font.render(leftHand[7], True, 'white')
-    screen.blit(text, ((leftOct * 245) - 25, HEIGHT - 55))
-    text = small_font.render(leftHand[9], True, 'white')
-    screen.blit(text, ((leftOct * 245) + 10, HEIGHT - 55))
-    text = small_font.render(leftHand[11], True, 'white')
-    screen.blit(text, ((leftOct * 245) + 45, HEIGHT - 55))
-    text = small_font.render(leftHand[1], True, 'black')
-    screen.blit(text, ((leftOct * 245) - 148, HEIGHT - 55))
-    text = small_font.render(leftHand[3], True, 'black')
-    screen.blit(text, ((leftOct * 245) - 113, HEIGHT - 55))
-    text = small_font.render(leftHand[6], True, 'black')
-    screen.blit(text, ((leftOct * 245) - 43, HEIGHT - 55))
-    text = small_font.render(leftHand[8], True, 'black')
-    screen.blit(text, ((leftOct * 245) - 8, HEIGHT - 55))
-    text = small_font.render(leftHand[10], True, 'black')
-    screen.blit(text, ((leftOct * 245) + 27, HEIGHT - 55))
-    # right hand
-    pygame.draw.rect(screen, 'dark gray', [(rightOct * 245) - 175, HEIGHT - 60, 245, 30], 0, 4)
-    pygame.draw.rect(screen, 'black', [(rightOct * 245) - 175, HEIGHT - 60, 245, 30], 4, 4)
-    text = small_font.render(rightHand[0], True, 'white')
-    screen.blit(text, ((rightOct * 245) - 165, HEIGHT - 55))
-    text = small_font.render(rightHand[2], True, 'white')
-    screen.blit(text, ((rightOct * 245) - 130, HEIGHT - 55))
-    text = small_font.render(rightHand[4], True, 'white')
-    screen.blit(text, ((rightOct * 245) - 95, HEIGHT - 55))
-    text = small_font.render(rightHand[5], True, 'white')
-    screen.blit(text, ((rightOct * 245) - 60, HEIGHT - 55))
-    text = small_font.render(rightHand[7], True, 'white')
-    screen.blit(text, ((rightOct * 245) - 25, HEIGHT - 55))
-    text = small_font.render(rightHand[9], True, 'white')
-    screen.blit(text, ((rightOct * 245) + 10, HEIGHT - 55))
-    text = small_font.render(rightHand[11], True, 'white')
-    screen.blit(text, ((rightOct * 245) + 45, HEIGHT - 55))
-    text = small_font.render(rightHand[1], True, 'black')
-    screen.blit(text, ((rightOct * 245) - 148, HEIGHT - 55))
-    text = small_font.render(rightHand[3], True, 'black')
-    screen.blit(text, ((rightOct * 245) - 113, HEIGHT - 55))
-    text = small_font.render(rightHand[6], True, 'black')
-    screen.blit(text, ((rightOct * 245) - 43, HEIGHT - 55))
-    text = small_font.render(rightHand[8], True, 'black')
-    screen.blit(text, ((rightOct * 245) - 8, HEIGHT - 55))
-    text = small_font.render(rightHand[10], True, 'black')
-    screen.blit(text, ((rightOct * 245) + 27, HEIGHT - 55))
 
 
 def draw_title_bar():
@@ -334,6 +282,21 @@ def draw_title_bar():
 
 
 
+
+
+# actives = {
+#     0 :
+# }
+
+
+
+
+
+
+
+# This is supposed to stop the KEYUP event happening repededly while you're actually still just holding the key.
+# It's also intendend to make the UP arrow key for sharps work as it's supposed to.
+pygame.key.set_repeat()
 
 run = True
 while run:
@@ -400,12 +363,8 @@ while run:
     timer.tick(fps)
     screen.fill('gray')
     white_keys, black_keys, active_whites, active_blacks = draw_piano(active_whites, active_blacks)
-    draw_hands(right_oct, left_oct, right_hand, left_hand)
     draw_title_bar()
 
-    # This is supposed to stop the KEYUP event happening repededly while you're actually still just holding the key.
-    # It's also intendend to make the UP arrow key for sharps work as it's supposed to.
-    pygame.key.set_repeat()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -431,17 +390,17 @@ while run:
                 index = first_octave_dict[event.text.upper()]
                 all_sounds[index].play(0, 1000)
                 # active_blacks.append([index, 30])
-            
+
             if event.text.upper() in second_octave_dict:
                 index = second_octave_dict[event.text.upper()]
                 all_sounds[index].play(0, 1000)
                 # active_blacks.append([index, 30])
-            
+
             if event.text.upper() in third_octave_dict:
                 index = third_octave_dict[event.text.upper()]
                 all_sounds[index].play(0, 1000)
                 # active_blacks.append([index, 30])
-            
+
             if event.text.upper() in fourth_octave_dict:
                 index = fourth_octave_dict[event.text.upper()]
                 all_sounds[index].play(0, 1000)
@@ -465,27 +424,27 @@ while run:
                 #     right_oct += 1
             if event.key == pygame.K_LEFT:
                 octaves = changeTonic(-1)
-            
+
             if event.key == pygame.K_UP:
                 octaves = temporaryUp()
 
-            
+
             if event.key == pygame.K_UP:
                 octaves = temporaryUp()
                 print("Press sharp. " + str(tonicArray[0]) + " " + str(octaves[0][0]))
-            
+
             if event.key == pygame.K_DOWN:
                 octaves = temporaryDown()
-        
+
         # So that the key resets when you let go of the sharp/flat key
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
                 octaves = releaseUp()
                 print("Release sharp. " + str(tonicArray[0]) + " " + str(octaves[0][0]))
-                            
+
             if event.key == pygame.K_DOWN:
                 octaves = releaseDown()
-            
+
 
 
     pygame.display.flip()
