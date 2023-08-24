@@ -350,12 +350,16 @@ recordingList = list()
 
 isCurrRecording = False
 timeCounter = 0
-def startStopRecord(isCurrRecording, recordingList):
+
+recordingCounter = 0
+
+def startStopRecord(isCurrRecording, recordingList, timeCounter, recordingCounter):
     if isCurrRecording:
+        recordingCounter += 1
         print("Recording stopping.")
         isCurrRecording = False
         outputStr = str(fps) + "\n" + str(recordingList)
-        fileName = str(now.strftime("%d,%m,%Y+%H,%M,%S")) + ".txt"
+        fileName = str(now.strftime("%d,%m,%Y+%H,%M,%S-" + str(recordingCounter))) + ".txt"
 
         f = open(fileName, mode="x")
         f.write(outputStr)
@@ -365,7 +369,7 @@ def startStopRecord(isCurrRecording, recordingList):
         isCurrRecording = True
         timeCounter = 0
         recordingList = list()
-    return isCurrRecording, recordingList
+    return isCurrRecording, recordingList, timeCounter, recordingCounter
 
 def addToRecordingList(index):
     if not isCurrRecording:
@@ -392,6 +396,9 @@ pygame.key.set_repeat()
 
 run = True
 while run:
+
+    fileName = str(now.strftime("%d,%m,%Y+%H,%M,%S")) + ".txt"
+
 
     timeCounter += 1
 
@@ -481,7 +488,7 @@ while run:
                 octaves, isMajor = changeMajor()
             
             if event.text.upper() == '9':
-                isCurrRecording, recordingList = startStopRecord(isCurrRecording, recordingList)
+                isCurrRecording, recordingList, timeCounter, recordingCounter = startStopRecord(isCurrRecording, recordingList, timeCounter, recordingCounter)
 
             if event.text.upper() in first_octave_dict:
                 index = first_octave_dict[event.text.upper()]
