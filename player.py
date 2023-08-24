@@ -196,7 +196,7 @@ timeCounter = 0
 # It's also intendend to make the UP arrow key for sharps work as it's supposed to.
 pygame.key.set_repeat()
 
-fileName = input("Name of file to play here: ")
+fileName = input("Name of file to play  (end it with .txt): ")
 f = open(fileName, "r")
 inputStr = f.read()
 fps, score = inputStr.split('\n')
@@ -222,6 +222,9 @@ while run:
         all_sounds[index].play(0, 1000)
         setActive(index)
         del score[0]
+        if len(score) == 0:
+            run = False
+            break
 
 
     for event in pygame.event.get():
@@ -230,8 +233,6 @@ while run:
         
 
 
-    if len(score) == 0:
-        run = False
 
             
 
