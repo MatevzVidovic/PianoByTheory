@@ -412,13 +412,14 @@ while run:
 
 
 
-    second_octave_dict = {'R': octaves[1][0],
-                        'T': octaves[1][1],
-                        'Z': octaves[1][2],
-                        'U': octaves[1][3],
-                        'I': octaves[1][4],
-                        'O': octaves[1][5],
-                        'P': octaves[1][6],}
+    second_octave_dict = {
+                        'Q': octaves[1][0],
+                        'W': octaves[1][1],
+                        'E': octaves[1][2],
+                        'R': octaves[1][3],
+                        'T': octaves[1][4],
+                        'Z': octaves[1][5],
+                        'U': octaves[1][6],}
 
 
     third_octave_dict = {'A': octaves[2][0],
