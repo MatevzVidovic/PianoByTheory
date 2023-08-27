@@ -206,7 +206,6 @@ def releaseDown():
 
 
 
-isPlaying = False
 
 def playRecording(transposeFor=0):
     fileName = input("Name of file to play  (end it with .txt): ")

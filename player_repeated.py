@@ -218,8 +218,14 @@ while run:
     timeCounter = -offsetBetweenRepetitions
     scoreToPlay = ast.literal_eval(score)
 
+    timer.tick(fps)
+    screen.fill('gray')
+    white_keys, black_keys, active_whites, active_blacks = draw_piano(active_whites, active_blacks)
+    draw_title_bar()
+
     playRun = True
     while playRun:
+
 
         timeCounter += 1
 
