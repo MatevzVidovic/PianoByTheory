@@ -207,51 +207,6 @@ def releaseDown():
 
 
 
-def playRecording(transposeFor=0):
-    fileName = input("Name of file to play  (end it with .txt): ")
-    try:
-        f = open(fileName, "r")
-    except:
-        print("Wrong filename.")
-        return
-    inputStr = f.read()
-    fps, score = inputStr.split('\n')
-
-    fps = int(fps)
-    score = ast.literal_eval(score)
-
-    timeCounter = 0
-
-    playRun = True
-    while playRun:
-
-        timeCounter += 1
-
-        
-        timer.tick(fps)
-        screen.fill('gray')
-        # white_keys, black_keys, active_whites, active_blacks = draw_piano(active_whites, active_blacks)
-        draw_title_bar()
-
-        
-        if len(score) != 0:
-            while score[0][1] == timeCounter:
-                index = score[0][0] + transposeFor
-                all_sounds[index].play(0, 1000)
-                setActive(index)
-                del score[0]
-                if len(score) == 0:
-                    playRun = False
-                    break
-
-
-
-        for event in pygame.event.get():
-            
-            if event.type == pygame.QUIT:
-                playRun = False
-    
-    return
 
 
 
@@ -406,13 +361,15 @@ timeCounter = 0
 
 recordingCounter = 0
 
-def startStopRecord(isCurrRecording, recordingList, timeCounter, recordingCounter):
+def startStopRecord(isCurrRecording, recordingList, timeCounter, recordingCounter, lastRecordingName):
     if isCurrRecording:
         recordingCounter += 1
         print("Recording stopping.")
         isCurrRecording = False
         outputStr = str(fps) + "\n" + str(recordingList)
         fileName = str(now.strftime("%d,%m,%Y+%H,%M,%S-" + str(recordingCounter))) + ".txt"
+
+        lastRecordingName[0] = fileName
 
         f = open(fileName, mode="x")
         f.write(outputStr)
@@ -431,6 +388,101 @@ def addToRecordingList(index):
         recordingList.append([index, timeCounter])
     return
 
+def playRecording(transposeFor=0):
+    fileName = input("Name of file to play  (end it with .txt): ")
+    try:
+        f = open(fileName, "r")
+    except:
+        print("Wrong filename.")
+        return
+    inputStr = f.read()
+    fps, score = inputStr.split('\n')
+
+    fps = int(fps)
+    score = ast.literal_eval(score)
+
+    timeCounter = 0
+
+    playRun = True
+    while playRun:
+
+        timeCounter += 1
+
+        
+        timer.tick(fps)
+        screen.fill('gray')
+        # white_keys, black_keys, active_whites, active_blacks = draw_piano(active_whites, active_blacks)
+        draw_title_bar()
+
+        
+        if len(score) != 0:
+            while score[0][1] == timeCounter:
+                index = score[0][0] + transposeFor
+                all_sounds[index].play(0, 1000)
+                setActive(index)
+                del score[0]
+                if len(score) == 0:
+                    playRun = False
+                    break
+
+
+
+        for event in pygame.event.get():
+            
+            if event.type == pygame.QUIT:
+                playRun = False
+    
+    return
+
+
+
+lastRecordingName = ["theInitializingName"]
+
+def playLastRecording(transposeFor=0):
+    fileName = lastRecordingName[0]
+    try:
+        f = open(fileName, "r")
+    except:
+        print("Wrong filename / no recording yet.")
+        return
+    inputStr = f.read()
+    fps, score = inputStr.split('\n')
+
+    fps = int(fps)
+    score = ast.literal_eval(score)
+
+    timeCounter = 0
+
+    playRun = True
+    while playRun:
+
+        timeCounter += 1
+
+        
+        timer.tick(fps)
+        screen.fill('gray')
+        # white_keys, black_keys, active_whites, active_blacks = draw_piano(active_whites, active_blacks)
+        draw_title_bar()
+
+        
+        if len(score) != 0:
+            while score[0][1] == timeCounter:
+                index = score[0][0] + transposeFor
+                all_sounds[index].play(0, 1000)
+                setActive(index)
+                del score[0]
+                if len(score) == 0:
+                    playRun = False
+                    break
+
+
+
+        for event in pygame.event.get():
+            
+            if event.type == pygame.QUIT:
+                playRun = False
+    
+    return
 
 
 
@@ -537,10 +589,13 @@ while run:
                 octaves, isMajor = changeMajor()
             
             if event.text.upper() == '9':
-                isCurrRecording, recordingList, timeCounter, recordingCounter = startStopRecord(isCurrRecording, recordingList, timeCounter, recordingCounter)
+                isCurrRecording, recordingList, timeCounter, recordingCounter = startStopRecord(isCurrRecording, recordingList, timeCounter, recordingCounter, lastRecordingName)
+
+            if event.text.upper() == 'O':
+                playRecording()
 
             if event.text.upper() == 'P':
-                playRecording()
+                playLastRecording()
 
             if event.text.upper() in first_octave_dict:
                 index = first_octave_dict[event.text.upper()]
