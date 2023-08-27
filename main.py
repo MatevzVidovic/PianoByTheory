@@ -13,6 +13,7 @@ medium_font = pygame.font.Font('assets/Terserah.ttf', 28)
 small_font = pygame.font.Font('assets/Terserah.ttf', 16)
 real_small_font = pygame.font.Font('assets/Terserah.ttf', 10)
 fps = 60
+noteLen = 1000
 timer = pygame.time.Clock()
 WIDTH = 52 * 35
 HEIGHT = 400
@@ -387,8 +388,6 @@ def addToRecordingList(index):
 
 
 
-
-
 # This is supposed to stop the KEYUP event happening repededly while you're actually still just holding the key.
 # It's also intendend to make the UP arrow key for sharps work as it's supposed to.
 pygame.key.set_repeat()
@@ -475,12 +474,12 @@ while run:
             black_key = False
             for i in range(len(black_keys)):
                 if black_keys[i].collidepoint(event.pos):
-                    black_sounds[i].play(0, 1000)
+                    black_sounds[i].play(0, noteLen)
                     black_key = True
                     active_blacks.append([i, 30])
             for i in range(len(white_keys)):
                 if white_keys[i].collidepoint(event.pos) and not black_key:
-                    white_sounds[i].play(0, 3000)
+                    white_sounds[i].play(0, noteLen)
                     active_whites.append([i, 30])
 
         if event.type == pygame.TEXTINPUT:
@@ -493,30 +492,34 @@ while run:
 
             if event.text.upper() in first_octave_dict:
                 index = first_octave_dict[event.text.upper()]
-                all_sounds[index].play(0, 1000)
+                all_sounds[index].play(0, noteLen)
                 setActive(index)
-                addToRecordingList(index)
+                if(isCurrRecording):
+                    addToRecordingList(index)
                 # active_blacks.append([index, 30])
 
             if event.text.upper() in second_octave_dict:
                 index = second_octave_dict[event.text.upper()]
-                all_sounds[index].play(0, 1000)
+                all_sounds[index].play(0, noteLen)
                 setActive(index)
-                addToRecordingList(index)
+                if(isCurrRecording):
+                    addToRecordingList(index)
                 # active_blacks.append([index, 30])
 
             if event.text.upper() in third_octave_dict:
                 index = third_octave_dict[event.text.upper()]
-                all_sounds[index].play(0, 1000)
+                all_sounds[index].play(0, noteLen)
                 setActive(index)
-                addToRecordingList(index)
+                if(isCurrRecording):
+                    addToRecordingList(index)
                 # active_blacks.append([index, 30])
 
             if event.text.upper() in fourth_octave_dict:
                 index = fourth_octave_dict[event.text.upper()]
-                all_sounds[index].play(0, 1000)
+                all_sounds[index].play(0, noteLen)
                 setActive(index)
-                addToRecordingList(index)
+                if(isCurrRecording):
+                    addToRecordingList(index)
                 # active_blacks.append([index, 30])
 
             # if event.text.upper() in right_dict:
