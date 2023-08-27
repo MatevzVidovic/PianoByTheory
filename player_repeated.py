@@ -84,6 +84,7 @@ pygame.display.set_caption("Eua's Python Piano")
 
 
 def draw_piano(whites, blacks):
+    
     white_rects = []
     for i in range(52):
         rect = pygame.draw.rect(screen, 'white', [i * 35, HEIGHT - 300, 35, 300], 0, 2)
@@ -190,7 +191,6 @@ def setActive(piano_notes_ix, activeLen=30):
 
 
 
-timeCounter = 0
 
 # This is supposed to stop the KEYUP event happening repededly while you're actually still just holding the key.
 # It's also intendend to make the UP arrow key for sharps work as it's supposed to.
@@ -202,39 +202,51 @@ inputStr = f.read()
 fps, score = inputStr.split('\n')
 
 fps = int(fps)
-score = ast.literal_eval(score)
+
+
+
+offsetBetweenRepetitions = fps * int(input("Time between repetitions in seconds: "))
 
 screen.fill('gray')
 white_keys, black_keys, active_whites, active_blacks = draw_piano(active_whites, active_blacks)
 draw_title_bar()
 
-playRun = True
-while playRun:
 
-    timeCounter += 1
+run = True
+while run:
 
-    
-    timer.tick(fps)
-    screen.fill('gray')
-    white_keys, black_keys, active_whites, active_blacks = draw_piano(active_whites, active_blacks)
-    draw_title_bar()
+    timeCounter = -offsetBetweenRepetitions
+    scoreToPlay = ast.literal_eval(score)
 
-    
-    if len(score) != 0:
-        while score[0][1] == timeCounter:
-            index = score[0][0]
-            all_sounds[index].play(0, 1000)
-            setActive(index)
-            del score[0]
-            if len(score) == 0:
-                break
+    playRun = True
+    while playRun:
 
+        timeCounter += 1
 
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            playRun = False
         
+        timer.tick(fps)
+        screen.fill('gray')
+        white_keys, black_keys, active_whites, active_blacks = draw_piano(active_whites, active_blacks)
+        draw_title_bar()
+
+        
+        if len(scoreToPlay) != 0:
+            while scoreToPlay[0][1] == timeCounter:
+                index = scoreToPlay[0][0]
+                all_sounds[index].play(0, 1000)
+                setActive(index)
+                del scoreToPlay[0]
+                if len(scoreToPlay) == 0:
+                    playRun = False
+                    break
+
+
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                playRun = False
+                run = False
+            
 
 
 

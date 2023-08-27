@@ -205,6 +205,9 @@ def releaseDown():
 
 
 
+
+isPlaying = False
+
 def playRecording(transposeFor=0):
     fileName = input("Name of file to play  (end it with .txt): ")
     print("Click P to stop.")
@@ -225,7 +228,7 @@ def playRecording(transposeFor=0):
         
         timer.tick(fps)
         screen.fill('gray')
-        # white_keys, black_keys, active_whites, active_blacks = draw_piano(active_whites, active_blacks)
+        white_keys, black_keys, active_whites, active_blacks = draw_piano(active_whites, active_blacks)
         draw_title_bar()
 
         
@@ -444,9 +447,6 @@ pygame.key.set_repeat()
 
 run = True
 while run:
-
-    fileName = str(now.strftime("%d,%m,%Y+%H,%M,%S")) + ".txt"
-
 
     timeCounter += 1
 
