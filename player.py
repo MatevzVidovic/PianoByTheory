@@ -204,8 +204,8 @@ fps, score = inputStr.split('\n')
 fps = int(fps)
 score = ast.literal_eval(score)
 
-run = True
-while run:
+playRun = True
+while playRun:
 
     timeCounter += 1
 
@@ -216,20 +216,20 @@ while run:
     draw_title_bar()
 
     
+    if len(score) != 0:
+        while score[0][1] == timeCounter:
+            index = score[0][0]
+            all_sounds[index].play(0, 1000)
+            setActive(index)
+            del score[0]
+            if len(score) == 0:
+                break
 
-    while score[0][1] == timeCounter:
-        index = score[0][0]
-        all_sounds[index].play(0, 1000)
-        setActive(index)
-        del score[0]
-        if len(score) == 0:
-            run = False
-            break
 
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            run = False
+            playRun = False
         
 
 

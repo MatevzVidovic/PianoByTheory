@@ -5,6 +5,8 @@ from pygame import mixer
 from datetime import datetime
 now = datetime.now()
 
+import ast
+
 pygame.init()
 pygame.mixer.set_num_channels(50)
 
@@ -200,6 +202,16 @@ def releaseDown():
     returnOctaves.append(listWithAdd(mantis, tonicArray[3]))
 
     return returnOctaves
+
+
+def playRecording():
+    fileName = input("Name of file to play  (end it with .txt): ")
+    f = open(fileName, "r")
+    inputStr = f.read()
+    fps, score = inputStr.split('\n')
+
+    fps = int(fps)
+    score = ast.literal_eval(score)
 
 
 
