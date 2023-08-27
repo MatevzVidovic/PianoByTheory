@@ -209,8 +209,11 @@ def releaseDown():
 
 def playRecording(transposeFor=0):
     fileName = input("Name of file to play  (end it with .txt): ")
-    print("Click P to stop.")
-    f = open(fileName, "r")
+    try:
+        f = open(fileName, "r")
+    except:
+        print("Wrong filename.")
+        return
     inputStr = f.read()
     fps, score = inputStr.split('\n')
 
@@ -227,7 +230,7 @@ def playRecording(transposeFor=0):
         
         timer.tick(fps)
         screen.fill('gray')
-        white_keys, black_keys, active_whites, active_blacks = draw_piano(active_whites, active_blacks)
+        # white_keys, black_keys, active_whites, active_blacks = draw_piano(active_whites, active_blacks)
         draw_title_bar()
 
         
@@ -245,12 +248,10 @@ def playRecording(transposeFor=0):
 
         for event in pygame.event.get():
             
-            if event.type == pygame.TEXTINPUT:
-                if event.text.upper() == 'P':
-                    playRun = False
-
             if event.type == pygame.QUIT:
                 playRun = False
+    
+    return
 
 
 
