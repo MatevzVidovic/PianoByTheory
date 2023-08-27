@@ -204,14 +204,51 @@ def releaseDown():
     return returnOctaves
 
 
-def playRecording():
+
+def playRecording(transposeFor=0):
     fileName = input("Name of file to play  (end it with .txt): ")
+    print("Click P to stop.")
     f = open(fileName, "r")
     inputStr = f.read()
     fps, score = inputStr.split('\n')
 
     fps = int(fps)
     score = ast.literal_eval(score)
+
+    timeCounter = 0
+
+    playRun = True
+    while playRun:
+
+        timeCounter += 1
+
+        
+        timer.tick(fps)
+        screen.fill('gray')
+        # white_keys, black_keys, active_whites, active_blacks = draw_piano(active_whites, active_blacks)
+        draw_title_bar()
+
+        
+        if len(score) != 0:
+            while score[0][1] == timeCounter:
+                index = score[0][0] + transposeFor
+                all_sounds[index].play(0, 1000)
+                setActive(index)
+                del score[0]
+                if len(score) == 0:
+                    playRun = False
+                    break
+
+
+
+        for event in pygame.event.get():
+            
+            if event.type == pygame.TEXTINPUT:
+                if event.text.upper() == 'P':
+                    playRun = False
+
+            if event.type == pygame.QUIT:
+                playRun = False
 
 
 
@@ -501,6 +538,9 @@ while run:
             
             if event.text.upper() == '9':
                 isCurrRecording, recordingList, timeCounter, recordingCounter = startStopRecord(isCurrRecording, recordingList, timeCounter, recordingCounter)
+
+            if event.text.upper() == 'P':
+                playRecording()
 
             if event.text.upper() in first_octave_dict:
                 index = first_octave_dict[event.text.upper()]
