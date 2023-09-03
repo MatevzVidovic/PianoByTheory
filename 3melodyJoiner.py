@@ -11,7 +11,7 @@ fps1, score1 = inputStr.split('\n')
 fps1 = ast.literal_eval(fps1)
 score1 = ast.literal_eval(score1)
 
-print("Length of first record in seconds: " + str(score1[-1][0] / fps1))
+print("Length of first record in seconds: " + str(score1[-1][1] / fps1))
 
 
 
@@ -27,12 +27,12 @@ delay = float(input("Delay in seconds from start of the original file: "))
 
 def addToArray(array, numToAdd):
     for i in range(len(array)):
-        array[i][0] += numToAdd
+        array[i][1] = int(array[i][1] + numToAdd)
     return
 
 def multInArray(array, numToMult):
     for i in range(len(array)):
-        array[i][0] *= numToMult
+        array[i][1] = int(array[i][1] * numToMult)
     return
 
 lcm = math.lcm(fps1, fps2)
@@ -42,7 +42,12 @@ mult2 = lcm / fps2
 multInArray(score1, mult1)
 multInArray(score2, mult2)
 
+print(score1)
+print(score2)
+
 addToArray(score2, int(lcm * delay))
+
+print(score2)
 
 
 fullScore = list()
@@ -61,14 +66,14 @@ for i in range(numOfNotes):
         ix1 += 1
         continue
 
-    if(score1[ix1][0] <= score2[ix2][0]):
+    if(score1[ix1][1] <= score2[ix2][1]):
         fullScore.append(score1[ix1])
         ix1 += 1
     else:
         fullScore.append(score2[ix2])
         ix2 += 1
         
-        
+print(fullScore)
 
 nameOfEndFile = str(input("Name of end file: "))
 outputStr = str(lcm) + "\n" + str(fullScore)
