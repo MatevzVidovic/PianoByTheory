@@ -101,8 +101,8 @@ def listWithAddInPlace(list, num):
 
 isMajor = True
 tonicArray = [12, 24, 36, 48]
-majorMantis = [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24]
-minorMantis = [0, 2, 3, 5, 7, 8, 10, 12, 14, 15, 17, 19, 20, 22, 24]
+majorMantis = [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24, 26, 28, 29, 31, 33, 35, 36]
+minorMantis = [0, 2, 3, 5, 7, 8, 10, 12, 14, 15, 17, 19, 20, 22, 24, 26, 27, 29, 31, 32, 34, 36]
 
 octaves = list()
 octaves.append(listWithAdd(majorMantis, tonicArray[0]))
@@ -559,7 +559,7 @@ while run:
                         'T': (1, 4),
                         'Z': (1, 5),
                         'U': (1, 6),
-                        # 'I': octaves[1][7],
+                        'I': (1, 7),
                         }
 
 
@@ -570,8 +570,11 @@ while run:
                           'G': (2, 4),
                           'H': (2, 5),
                           'J': (2, 6),
-                        # 'K': octaves[2][7],
-                        # 'L': octaves[2][8],
+                          'K': (2, 7),
+                          'L': (2, 8),
+                          'Č': (2, 9),
+                          'Ć': (2, 10),
+                          'Ž': (2, 11),
                         }
 
     fourth_octave_dict = {'Y': (3, 0),
@@ -581,31 +584,8 @@ while run:
                           'B': (3, 4),
                           'N': (3, 5),
                           'M': (3, 6)}
-    # left_dict = {'Z': f'C{left_oct}',
-    #              'S': f'C#{left_oct}',
-    #              'X': f'D{left_oct}',
-    #              'D': f'D#{left_oct}',
-    #              'C': f'E{left_oct}',
-    #              'V': f'F{left_oct}',
-    #              'G': f'F#{left_oct}',
-    #              'B': f'G{left_oct}',
-    #              'H': f'G#{left_oct}',
-    #              'N': f'A{left_oct}',
-    #              'J': f'A#{left_oct}',
-    #              'M': f'B{left_oct}'}
+    
 
-    # right_dict = {'R': f'C{right_oct}',
-    #               '5': f'C#{right_oct}',
-    #               'T': f'D{right_oct}',
-    #               '6': f'D#{right_oct}',
-    #               'Y': f'E{right_oct}',
-    #               'U': f'F{right_oct}',
-    #               '8': f'F#{right_oct}',
-    #               'I': f'G{right_oct}',
-    #               '9': f'G#{right_oct}',
-    #               'O': f'A{right_oct}',
-    #               '0': f'A#{right_oct}',
-    #               'P': f'B{right_oct}'}
     timer.tick(fps)
     screen.fill('gray')
     white_keys, black_keys, active_whites, active_blacks = draw_piano(active_whites, active_blacks)
