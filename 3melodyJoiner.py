@@ -73,7 +73,7 @@ for i in range(numOfNotes):
         fullScore.append(score2[ix2])
         ix2 += 1
         
-print(fullScore)
+# print(fullScore)
 
 nameOfEndFile = str(input("Name of end file: "))
 outputStr = str(lcm) + "\n" + str(fullScore)

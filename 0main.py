@@ -101,8 +101,8 @@ def listWithAddInPlace(list, num):
 
 isMajor = True
 tonicArray = [12, 24, 36, 48]
-majorMantis = [0, 2, 4, 5, 7, 9, 11]
-minorMantis = [0, 2, 3, 5, 7, 8, 10]
+majorMantis = [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17]
+minorMantis = [0, 2, 3, 5, 7, 8, 10, 12, 14, 15, 17]
 
 octaves = list()
 octaves.append(listWithAdd(majorMantis, tonicArray[0]))
@@ -486,6 +486,13 @@ def playLastRecording(transposeFor=0):
 
 
 
+chordMode = False
+def playNoteOrChord (mainNote, chordMode):
+    # main note is the leftmost note of the chord. This note defines it in it's name and sound.
+    # When not in chord mode, the note is simply the main note.
+    
+    return
+
 
 
 
@@ -519,7 +526,9 @@ while run:
                         'R': octaves[1][3],
                         'T': octaves[1][4],
                         'Z': octaves[1][5],
-                        'U': octaves[1][6],}
+                        'U': octaves[1][6],
+                        # 'I': octaves[1][7],
+                        }
 
 
     third_octave_dict = {'A': octaves[2][0],
@@ -528,7 +537,10 @@ while run:
                         'F': octaves[2][3],
                         'G': octaves[2][4],
                         'H': octaves[2][5],
-                        'J': octaves[2][6],}
+                        'J': octaves[2][6],
+                        # 'K': octaves[2][7],
+                        # 'L': octaves[2][8],
+                        }
 
     fourth_octave_dict = {'Y': octaves[3][0],
                         'X': octaves[3][1],
