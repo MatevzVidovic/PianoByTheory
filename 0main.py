@@ -101,8 +101,8 @@ def listWithAddInPlace(list, num):
 
 isMajor = True
 tonicArray = [12, 24, 36, 48]
-majorMantis = [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17]
-minorMantis = [0, 2, 3, 5, 7, 8, 10, 12, 14, 15, 17]
+majorMantis = [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24]
+minorMantis = [0, 2, 3, 5, 7, 8, 10, 12, 14, 15, 17, 19, 20, 22, 24]
 
 octaves = list()
 octaves.append(listWithAdd(majorMantis, tonicArray[0]))
@@ -126,10 +126,10 @@ def changeTonic(numOfChange):
     returnOctaves.append(listWithAdd(mantis, tonicArray[2]))
     returnOctaves.append(listWithAdd(mantis, tonicArray[3]))
 
-    print(piano_notes[tonicArray[0]])
-    print("maj") if isMajor else print("min")
+    majOrMinStr = ("maj") if isMajor else ("min")
+    print(piano_notes[tonicArray[0]] + " " + majOrMinStr)
 
-    print(octaves)
+    # print(octaves)
 
 
     return returnOctaves
@@ -487,10 +487,41 @@ def playLastRecording(transposeFor=0):
 
 
 chordMode = False
+
+def changeChordMode(currentChordMode):
+    return (not currentChordMode)
+
 def playNoteOrChord (mainNote, chordMode):
     # main note is the leftmost note of the chord. This note defines it in it's name and sound.
     # When not in chord mode, the note is simply the main note.
+
+    #The main note comes as a tuple: (octave, posInOctave)
+    if chordMode:
+        index0 = octaves[mainNote[0]][mainNote[1]]
+        index1 = octaves[mainNote[0]][mainNote[1] +2]
+        index2 = octaves[mainNote[0]][mainNote[1] +4]
+
+        all_sounds[index0].play(0, noteLen)
+        all_sounds[index1].play(0, noteLen)
+        all_sounds[index2].play(0, noteLen)
+
+        setActive(index0)
+        setActive(index1)
+        setActive(index2)
+
+        if(isCurrRecording):
+            addToRecordingList(index0)
+            addToRecordingList(index1)
+            addToRecordingList(index2)
+
+        return
     
+    else:
+        index = octaves[mainNote[0]][mainNote[1]]
+        all_sounds[index].play(0, noteLen)
+        setActive(index)
+        if(isCurrRecording):
+            addToRecordingList(index)
     return
 
 
@@ -509,46 +540,47 @@ while run:
 
     timeCounter += 1
 
-    first_octave_dict = {'1': octaves[0][0],
-                    '2': octaves[0][1],
-                    '3': octaves[0][2],
-                    '4': octaves[0][3],
-                    '5': octaves[0][4],
-                    '6': octaves[0][5],
-                    '7': octaves[0][6],}
+    first_octave_dict = {
+                    '1': (0, 0),
+                    '2': (0, 1),
+                    '3': (0, 2),
+                    '4': (0, 3),
+                    '5': (0, 4),
+                    '6': (0, 5),
+                    '7': (0, 6),}
 
 
 
     second_octave_dict = {
-                        'Q': octaves[1][0],
-                        'W': octaves[1][1],
-                        'E': octaves[1][2],
-                        'R': octaves[1][3],
-                        'T': octaves[1][4],
-                        'Z': octaves[1][5],
-                        'U': octaves[1][6],
+                        'Q': (1, 0),
+                        'W': (1, 1),
+                        'E': (1, 2),
+                        'R': (1, 3),
+                        'T': (1, 4),
+                        'Z': (1, 5),
+                        'U': (1, 6),
                         # 'I': octaves[1][7],
                         }
 
 
-    third_octave_dict = {'A': octaves[2][0],
-                        'S': octaves[2][1],
-                        'D': octaves[2][2],
-                        'F': octaves[2][3],
-                        'G': octaves[2][4],
-                        'H': octaves[2][5],
-                        'J': octaves[2][6],
+    third_octave_dict = { 'A': (2, 0),
+                          'S': (2, 1),
+                          'D': (2, 2),
+                          'F': (2, 3),
+                          'G': (2, 4),
+                          'H': (2, 5),
+                          'J': (2, 6),
                         # 'K': octaves[2][7],
                         # 'L': octaves[2][8],
                         }
 
-    fourth_octave_dict = {'Y': octaves[3][0],
-                        'X': octaves[3][1],
-                        'C': octaves[3][2],
-                        'V': octaves[3][3],
-                        'B': octaves[3][4],
-                        'N': octaves[3][5],
-                        'M': octaves[3][6],}
+    fourth_octave_dict = {'Y': (3, 0),
+                          'X': (3, 1),
+                          'C': (3, 2),
+                          'V': (3, 3),
+                          'B': (3, 4),
+                          'N': (3, 5),
+                          'M': (3, 6)}
     # left_dict = {'Z': f'C{left_oct}',
     #              'S': f'C#{left_oct}',
     #              'X': f'D{left_oct}',
@@ -603,6 +635,9 @@ while run:
             if event.text.upper() == '9':
                 isCurrRecording, recordingList, timeCounter, recordingCounter = startStopRecord(isCurrRecording, recordingList, timeCounter, recordingCounter, lastRecordingName)
 
+            if event.text.upper() == '8':
+                chordMode = changeChordMode(chordMode)
+            
             if event.text.upper() == 'O':
                 playRecording()
 
@@ -610,36 +645,21 @@ while run:
                 playLastRecording()
 
             if event.text.upper() in first_octave_dict:
-                index = first_octave_dict[event.text.upper()]
-                all_sounds[index].play(0, noteLen)
-                setActive(index)
-                if(isCurrRecording):
-                    addToRecordingList(index)
-                # active_blacks.append([index, 30])
+                noteTuple = first_octave_dict[event.text.upper()]
+                playNoteOrChord(noteTuple, chordMode)
 
+                
             if event.text.upper() in second_octave_dict:
-                index = second_octave_dict[event.text.upper()]
-                all_sounds[index].play(0, noteLen)
-                setActive(index)
-                if(isCurrRecording):
-                    addToRecordingList(index)
-                # active_blacks.append([index, 30])
+                noteTuple = second_octave_dict[event.text.upper()]
+                playNoteOrChord(noteTuple, chordMode)
 
             if event.text.upper() in third_octave_dict:
-                index = third_octave_dict[event.text.upper()]
-                all_sounds[index].play(0, noteLen)
-                setActive(index)
-                if(isCurrRecording):
-                    addToRecordingList(index)
-                # active_blacks.append([index, 30])
+                noteTuple = third_octave_dict[event.text.upper()]
+                playNoteOrChord(noteTuple, chordMode)
 
             if event.text.upper() in fourth_octave_dict:
-                index = fourth_octave_dict[event.text.upper()]
-                all_sounds[index].play(0, noteLen)
-                setActive(index)
-                if(isCurrRecording):
-                    addToRecordingList(index)
-                # active_blacks.append([index, 30])
+                noteTuple = fourth_octave_dict[event.text.upper()]
+                playNoteOrChord(noteTuple, chordMode)
 
             # if event.text.upper() in right_dict:
             #     if right_dict[event.text.upper()][1] == '#':
